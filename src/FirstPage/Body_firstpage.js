@@ -72,8 +72,8 @@ export class Body_firstpage extends React.Component{
         return(
             <Container fluid>
              <Row className="justify-content-center" >
-                <Col xs={2} md={5}></Col>
-                 <Col xs={5} md={5} className="text-align-center"> <h1 className="">ARTICOLI</h1></Col>
+                <Col   md={5}></Col>
+                 <Col xs={5} md={5} className="text-align-center col_title_page"> <h1 className="title_page_1">ARTICOLI</h1></Col>
                 <Col md={2}></Col>
              </Row>
              <Row >

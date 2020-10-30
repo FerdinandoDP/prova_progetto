@@ -134,6 +134,13 @@
     height: 130px;
   }
 
+  .title_page_1{
+    font-size: 2rem;
+  }
+
+  .col_title_page{
+    margin-right: 1em;
+  }
   
 
 }
