@@ -61,7 +61,7 @@ export class Body_firstpage extends React.Component{
     }
 
     init(){
-        fetch('http://localhost:4000/articles').then(res=>res.json()).then(res=>this.setState({articles: res})).then(()=>this.setState({initialized: true})).then(()=>console.log(this.state.articles));
+        fetch('https://obscure-everglades-58254.herokuapp.com/articles').then(res=>res.json()).then(res=>this.setState({articles: res})).then(()=>this.setState({initialized: true})).then(()=>console.log(this.state.articles));
     }
 
     componentDidMount(){

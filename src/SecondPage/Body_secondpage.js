@@ -130,8 +130,10 @@ export class Body_secondpage extends React.Component{
     }
 
     init(){
-        fetch('http://localhost:4000/articles').then(res=>res.json()).then(res=>this.setState({articles: res})).then(()=>this.setState({initialized_article: true})).then(()=>console.log(this.state.articles));
-        fetch('http://localhost:4000/comments').then(res=>res.json()).then(res=>this.setState({comments: res})).then(()=>this.setState({initialized_comments: true})).then(()=>console.log(this.state.articles));
+      //  fetch('http://localhost:4000/articles').then(res=>res.json()).then(res=>this.setState({articles: res})).then(()=>this.setState({initialized_article: true})).then(()=>console.log(this.state.articles));
+      //  fetch('http://localhost:4000/comments').then(res=>res.json()).then(res=>this.setState({comments: res})).then(()=>this.setState({initialized_comments: true})).then(()=>console.log(this.state.articles));
+      fetch('https://obscure-everglades-58254.herokuapp.com/articles').then(res=>res.json()).then(res=>this.setState({articles: res})).then(()=>this.setState({initialized_article: true})).then(()=>console.log(this.state.articles));
+      fetch('https://obscure-everglades-58254.herokuapp.com/comments').then(res=>res.json()).then(res=>this.setState({comments: res})).then(()=>this.setState({initialized_comments: true})).then(()=>console.log(this.state.articles));
     }
 
     componentDidMount(){

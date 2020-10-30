@@ -43,7 +43,7 @@ import {withRouter} from 'react-router';
   }
 
     init(){
-      fetch('http://localhost:4000/articles').then(res=>res.json()).then(res=>this.setState({articles: res})).then(()=>this.setState({initialized: true})).then(()=>console.log(this.state.initialized));
+      fetch('https://obscure-everglades-58254.herokuapp.com/articles').then(res=>res.json()).then(res=>this.setState({articles: res})).then(()=>this.setState({initialized: true})).then(()=>console.log(this.state.initialized));
     }
 
     componentDidMount(){
