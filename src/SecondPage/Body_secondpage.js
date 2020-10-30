@@ -8,7 +8,9 @@ import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Badge from 'react-bootstrap/Badge';
-import {Link} from 'react-router-dom';
+import { InputGroup } from 'react-bootstrap';
+import FormControl from 'react-bootstrap/FormControl';
+import ListGroup from 'react-bootstrap/ListGroup'
 
 export class Body_secondpage extends React.Component{
     constructor(props){
@@ -17,7 +19,8 @@ export class Body_secondpage extends React.Component{
             articles: [],
             comments: [],
             initialized_article: false,
-            initialized_comments: false
+            initialized_comments: false,
+            changed: false
         }
         this.get_id=this.get_id.bind(this);
         this.routeChange=this.routeChange.bind(this);
@@ -28,6 +31,10 @@ export class Body_secondpage extends React.Component{
         this.add_tag=this.add_tag.bind(this);
         this.show_tags=this.show_tags.bind(this);
         this.show_article=this.show_article.bind(this);
+        this.show_comment=this.show_comment.bind(this);
+        this.show_all_comments=this.show_all_comments.bind(this);
+        this.add_comment=this.add_comment.bind(this);
+        this.find_and_update=this.find_and_update.bind(this);
     }
     
     get_id(){
@@ -47,7 +54,7 @@ export class Body_secondpage extends React.Component{
     addCard(article, featured){
         if(this.state.initialized_article===true && article.featured===featured && article.draft===false && article._id != this.get_id()){
         return (
-        <Col md={3} className="justify-content-center " key={article._id}>
+        <Col  className="justify-content-center " key={article._id}>
         <Card style={{ width: '16rem', height: '20rem'}} className="bg-dark text-white mx-2 mt-2 mb-3 card_p">
             <Card.Img variant="top" src={article.img} style={{ height: '150px'}}/>
             <Card.Body>
@@ -96,6 +103,19 @@ export class Body_secondpage extends React.Component{
         }
     }
 
+    find_and_update(id_article){
+        if(this.state.initialized_article===true){
+            var found=false;
+            var i=0;
+            while(i<this.state.articles.length && found===false){
+                if(this.state.articles[i]._id === this.get_id()){
+                    this.setState(state=>{state.articles[i].comments.push(id_article)});
+                }
+                i++;
+            }
+        }
+    }
+
     add_tag(tag){
         return(
             <Badge variant="light" className="my-2 mr-1 col_badge"  key={tag}>{tag}</Badge>
@@ -106,6 +126,29 @@ export class Body_secondpage extends React.Component{
         var array=new Array();
         for(var i=0;i<article.tags.length;i++){
             array.push(this.add_tag(article.tags[i]));
+        }
+        return array;
+    }
+
+    show_comment(id_comment){
+        var i=0;
+        var found=false;
+        while(i<this.state.comments.length && found===false){
+            if(this.state.comments[i]._id===id_comment){
+                found=true;
+                return (
+                <ListGroup.Item variant="light" className="text-left" key={id_comment}>Autore: {this.state.comments[i].author} <br/> Messaggio: {this.state.comments[i].body}</ListGroup.Item>
+                )
+            }
+            i++;
+        }
+    }
+
+    show_all_comments(art){
+        var array=new Array();
+        for(var i=0;i<art.comments.length;i++){
+            
+            array.push(this.show_comment(art.comments[i]));
         }
         return array;
     }
@@ -122,10 +165,53 @@ export class Body_secondpage extends React.Component{
                 <h2 className="my-3">{art.subtitle}</h2>
                 <img className="my-4" src={art.img}/>
                 <p className="text-left">{art.body}<br /><br />tags:</p>  
-                <h4 className="text-left">{this.show_tags(art)}</h4>  
+                <h4 className="text-left">{this.show_tags(art)}</h4>
+                <InputGroup className="mt-2">
+                    <FormControl placeholder="Inserisci un commento" ref={ref=>{this.myInput=ref}} />
+                    <InputGroup.Append>
+                        <Button variant="outline-light" onClick={()=>{this.add_comment()}}>Invia</Button>
+                    </InputGroup.Append>
+                </InputGroup>
+                    <p className="text-left mt-1">Commenti: </p>
+                <ListGroup className="mt-1 mb-4">
+                    {this.show_all_comments(art)}
+                </ListGroup>
+                
             </Col>
             )
         }
+        
+    }
+
+    add_comment(){
+        var new_comment="";
+        var comment={
+            body: this.myInput.value,
+            article: this.get_id()
+        }
+        this.myInput.value="";
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(comment)
+        };
+        fetch('https://obscure-everglades-58254.herokuapp.com/comments', requestOptions).then(response => response.json())
+        .then(res=>{this.setState(state=> {state.comments.push(res)})})
+        .then(()=>new_comment=this.state.comments[this.state.comments.length-1])
+        .then(()=>{
+            var art=this.find_article()
+            var comm={
+                comments: art.comments
+            }
+            comm.comments.push(new_comment._id)
+            console.log(comm)
+            const request2Options = {
+             method: 'PATCH',
+             headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({comments: comm.comments})
+            };
+            fetch('https://obscure-everglades-58254.herokuapp.com/articles/'+this.get_id() , request2Options).then(res=>res.json()).then(res=>console.log(res)).then(()=>window.location.reload(false))
+            });
         
     }
 
@@ -153,7 +239,7 @@ export class Body_secondpage extends React.Component{
                     </h2>
                  </Col>
             </Row>
-            <Row className="my-2 mx-2 justify-content-md-center cards_section d-flex flex-row flex-nowrap" style={{border:'solid 1px black', overflow: "hidden", overflowX: "auto"}}>
+            <Row className="my-2 mx-2 cards_section d-flex flex-row flex-nowrap" style={{border:'solid 1px black', overflow: "hidden", overflowX: "auto"}}>
                   {this.initialized_articles()}
             </Row>
             </Container>

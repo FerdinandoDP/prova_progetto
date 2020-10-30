@@ -29,7 +29,7 @@ export class Body_firstpage extends React.Component{
     addCard(article,featured){
         if(this.state.initialized===true && article.featured===featured && article.draft===false){
         return (
-        <Col md={3} className="justify-content-center " key={article._id}>
+        <Col className="justify-content-center " key={article._id}>
         <Card style={{ width: '16rem', height: '20rem'}} className="bg-dark text-white mx-2 mt-2 mb-3 card_p">
             <Card.Img variant="top" src={article.img} style={{ height: '150px'}}/>
             <Card.Body>
@@ -83,7 +83,7 @@ export class Body_firstpage extends React.Component{
                     </h2>
                  </Col>
              </Row>
-              <Row className="my-2 mx-2 justify-content-md-center cards_section d-flex flex-row flex-nowrap" style={{border:'solid 1px black', overflow: "hidden", overflowX: "auto"}}>
+              <Row className="my-2 mx-2 cards_section d-flex flex-row flex-nowrap" style={{border:'solid 1px black', overflow: "hidden", overflowX: "auto"}}>
                  {this.initialized_articles(true)}   
               </Row>
               <Row>
@@ -93,7 +93,7 @@ export class Body_firstpage extends React.Component{
                     </h2>
                  </Col>
              </Row>
-              <Row className="my-2 mx-2 justify-content-md-center cards_section d-flex flex-row flex-nowrap" style={{border:'solid 1px black', overflow: "hidden", overflowX: "auto"}}>
+              <Row className="my-2 mx-2 cards_section d-flex flex-row flex-nowrap" style={{border:'solid 1px black', overflow: "hidden", overflowX: "auto"}}>
                   {this.initialized_articles(false)}
               </Row>
             </Container>
