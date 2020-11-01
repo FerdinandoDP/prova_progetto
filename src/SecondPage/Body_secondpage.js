@@ -21,7 +21,7 @@ export class Body_secondpage extends React.Component{
             comments: [],
             initialized_article: false,
             initialized_comments: false,
-            changed: false
+            list: null
         }
         this.loading=this.loading.bind(this);
         this.get_id=this.get_id.bind(this);
@@ -36,7 +36,7 @@ export class Body_secondpage extends React.Component{
         this.show_comment=this.show_comment.bind(this);
         this.show_all_comments=this.show_all_comments.bind(this);
         this.add_comment=this.add_comment.bind(this);
-        this.find_and_update=this.find_and_update.bind(this);
+        
     }
     
     loading(){
@@ -113,20 +113,7 @@ export class Body_secondpage extends React.Component{
         }
     }
 
-    find_and_update(id_comment){
-        if(this.state.initialized_article===true){
-            var found=false;
-            var i=0;
-            while(i<this.state.articles.length && found===false){
-                if(this.state.articles[i]._id === this.get_id()){
-                    this.setState(state=>{state.articles[i].comments.push(id_comment)});
-                    
-                    found=true;
-                }
-                i++;
-            }
-        }
-    }
+    
 
     add_tag(tag){
         return(
@@ -158,9 +145,10 @@ export class Body_secondpage extends React.Component{
 
     show_all_comments(art){
         var array=new Array();
-        for(var i=0;i<art.comments.length;i++){
-            
-            array.push(this.show_comment(art.comments[i]));
+        for (var i=0;i<this.state.comments.length;i++){
+            if(art._id === this.state.comments[i].article){
+                array.push(this.show_comment(this.state.comments[i]._id));
+            }
         }
         return array;
     }
@@ -187,6 +175,7 @@ export class Body_secondpage extends React.Component{
                     <p className="text-left mt-1">Commenti: </p>
                 <ListGroup className="mt-1 mb-4">
                     {this.show_all_comments(art)}
+                    {console.log(this.state.comments)}
                 </ListGroup>
                 
             </Col>
@@ -208,7 +197,7 @@ export class Body_secondpage extends React.Component{
             body: JSON.stringify(comment)
         };
         fetch('https://obscure-everglades-58254.herokuapp.com/comments', requestOptions).then(response => response.json())
-        .then(res=>{this.setState(state=> {state.comments.push(res)})})
+        .then(res=>{this.setState(()=> this.state.comments.push(res))})
         .then(()=>new_comment=this.state.comments[this.state.comments.length-1])
         .then(()=>{
             var art=this.find_article()
@@ -222,7 +211,7 @@ export class Body_secondpage extends React.Component{
              headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({comments: comm.comments})
             };
-            fetch('https://obscure-everglades-58254.herokuapp.com/articles/'+this.get_id() , request2Options).then(res=>res.json()).then(res=>console.log(res)).then(()=>window.location.reload(false));
+            fetch('https://obscure-everglades-58254.herokuapp.com/articles/'+this.get_id() , request2Options).then(res=>res.json());
             });
         
     }
