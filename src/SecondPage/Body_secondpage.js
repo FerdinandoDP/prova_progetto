@@ -10,7 +10,8 @@ import Button from 'react-bootstrap/Button';
 import Badge from 'react-bootstrap/Badge';
 import { InputGroup } from 'react-bootstrap';
 import FormControl from 'react-bootstrap/FormControl';
-import ListGroup from 'react-bootstrap/ListGroup'
+import ListGroup from 'react-bootstrap/ListGroup';
+import Spinner from 'react-bootstrap/Spinner';
 
 export class Body_secondpage extends React.Component{
     constructor(props){
@@ -22,6 +23,7 @@ export class Body_secondpage extends React.Component{
             initialized_comments: false,
             changed: false
         }
+        this.loading=this.loading.bind(this);
         this.get_id=this.get_id.bind(this);
         this.routeChange=this.routeChange.bind(this);
         this.init=this.init.bind(this);
@@ -37,6 +39,14 @@ export class Body_secondpage extends React.Component{
         this.find_and_update=this.find_and_update.bind(this);
     }
     
+    loading(){
+        if(this.state.initialized_article===false){
+            return(
+                <Spinner animation="border" variant="light" className=" my-2 mx-2 "/>
+            )
+        }
+    }
+
     get_id(){
         var path=window.location.href;
         var array=path.split('/');
@@ -103,13 +113,15 @@ export class Body_secondpage extends React.Component{
         }
     }
 
-    find_and_update(id_article){
+    find_and_update(id_comment){
         if(this.state.initialized_article===true){
             var found=false;
             var i=0;
             while(i<this.state.articles.length && found===false){
                 if(this.state.articles[i]._id === this.get_id()){
-                    this.setState(state=>{state.articles[i].comments.push(id_article)});
+                    this.setState(state=>{state.articles[i].comments.push(id_comment)});
+                    
+                    found=true;
                 }
                 i++;
             }
@@ -210,7 +222,7 @@ export class Body_secondpage extends React.Component{
              headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({comments: comm.comments})
             };
-            fetch('https://obscure-everglades-58254.herokuapp.com/articles/'+this.get_id() , request2Options).then(res=>res.json()).then(res=>console.log(res)).then(()=>window.location.reload(false))
+            fetch('https://obscure-everglades-58254.herokuapp.com/articles/'+this.get_id() , request2Options).then(res=>res.json()).then(res=>console.log(res)).then(()=>window.location.reload(false));
             });
         
     }
@@ -230,6 +242,7 @@ export class Body_secondpage extends React.Component{
         return(
             <Container fluid>
             <Row className="mt-3 mb-2 mx-2 article_page bg-dark ">
+                {this.loading()}
                 {this.show_article()}
             </Row>
             <Row>

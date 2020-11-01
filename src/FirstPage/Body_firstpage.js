@@ -8,6 +8,7 @@ import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
 import Badge from 'react-bootstrap/Badge';
+import Spinner from 'react-bootstrap/Spinner';
 
 export class Body_firstpage extends React.Component{
     constructor(props){
@@ -18,8 +19,15 @@ export class Body_firstpage extends React.Component{
         this.addCard=this.addCard.bind(this);
         this.initialized_articles=this.initialized_articles.bind(this);
         this.routeChange=this.routeChange.bind(this);
+        this.loading=this.loading.bind(this);
     }
-
+    loading(){
+        if(this.state.initialized===false){
+            return(
+                <Spinner animation="border" variant="dark" />
+            )
+        }
+    }
     routeChange(article){
         let path= '/articles/?_id='+ article._id ;
         history.push(path);
@@ -80,16 +88,19 @@ export class Body_firstpage extends React.Component{
                  <Col>
                     <h2>
                         <Badge variant="dark" className="mx-2 my_badge">In Primo Piano</Badge>
+                        {this.loading()}
                     </h2>
                  </Col>
              </Row>
               <Row className="my-2 mx-2 cards_section d-flex flex-row flex-nowrap" style={{border:'solid 1px black', overflow: "hidden", overflowX: "auto"}}>
+                 
                  {this.initialized_articles(true)}   
               </Row>
               <Row>
                  <Col>
                     <h2>
                         <Badge variant="dark" className="mx-2 my_badge">Altri articoli..</Badge>
+                        {this.loading()}
                     </h2>
                  </Col>
              </Row>

@@ -54,7 +54,7 @@
   background: black;
 
 }
-@media screen and (min-width: 575px) and (max-width: 768px) {
+@media screen and (min-width: 575px) and (max-width: 767px) {
   .col_footer_1{
     border-right: none;
     text-align: center;
